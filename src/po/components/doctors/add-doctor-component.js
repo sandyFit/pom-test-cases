@@ -1,6 +1,10 @@
-class AddDoctorComponent {
-    get rootEl() {
-        return $('.new-doctor-dialog');
+const BaseComponent = require("../common/base.component");
+
+class AddDoctorComponent extends BaseComponent {
+    constructor() {
+        super('.new-doctor-dialog'); 
     }
+
+        
 }
 module.exports = AddDoctorComponent;
