@@ -38,17 +38,18 @@ describe("Doctors' page", () => {
         await pages("doctors").doctorListHeader.addNewDoctorBtn.click();
         await pages("doctors").addDoctorModal.rootEl.waitForDisplayed();
 
-        await $('[name="Name"]').setValue("John Doe");
-        await $('#DoctorMobile').setValue(6669996969);
-        await $('[name="Email"]').setValue("test@test.com");
-        await $('[name="Education"]').setValue("Basic");
-        await $('[name="Designation"]').setValue("Test");
+        await pages("doctors").addDoctorModal.input("name").setValue("John Doe");
+        await pages("doctors").addDoctorModal.input("phone").setValue(6669996969);
+        await pages("doctors").addDoctorModal.input("email").setValue("test@test.com");
+        await pages("doctors").addDoctorModal.input("education").setValue("Basic");
+        await pages("doctors").addDoctorModal.input("designation").setValue("Test");
 
-        await $('.e-footer-content button.e-primary').click();
+        await pages("doctors").addDoctorModal.saveBtn.click();
         await expect(pages("doctors").addDoctorModal.rootEl).not.toBeDisplayed();
 
-        await expect($('#Specialist_8 .name')).toHaveText("Dr. John Doe");
-        await expect($('#Specialist_8 .education')).toHaveText("Basic", { ignoreCase: true });
+        await expect(pages("doctors").SpecialistCard(8).name).toHaveText("Dr. John Doe");
+        await expect(pages("doctors").SpecialistCard(8).education).toHaveText("Basic", { ignoreCase: true });
+
     });
 
     /**
@@ -58,9 +59,10 @@ describe("Doctors' page", () => {
         await pages("dashboard").sideMenu.item("doctors").click();
         await pages("doctors").doctorListHeader.addNewDoctorBtn.click();
         await pages("doctors").addDoctorModal.rootEl.waitForDisplayed();
-        await $('.new-doctor-dialog button.e-dlg-closeicon-btn').click();
+        await pages("doctors").addDoctorModal.closeBtn.click();
 
         await expect(pages("doctors").addDoctorModal.rootEl).not.toBeDisplayed();
     })
 });
+
 
