@@ -1,3 +1,8 @@
+const DashboardPage = require('./../po/pages/dashboard.page');
+const dashboard = new DashboardPage();
+
+const DoctorsPage = require('./../po/pages/doctor.page');
+const doctorsPage = new DoctorsPage();
 /**
  * @fileoverview Test suite for the Doctors section of the Syncfunsion Appointment Planner demo app.
  * This includes tests for page title validation, modal interaction, and doctor creation.
@@ -8,7 +13,7 @@ describe("Doctors' page", () => {
      * Navigate to the dashboard before each test case.
      */
     beforeEach(async () => {
-        await browser.url("https://ej2.syncfusion.com/showcase/angular/appointmentplanner/#/dashboard");
+        await dashboard.open(); 
     });
 
     /**
@@ -16,6 +21,7 @@ describe("Doctors' page", () => {
      */
     it("Check page title", async () => {
         const title = await browser.getTitle();
+        console.log(`Page title in the browser: ${title}`)
         await expect(browser).toHaveTitle("Appointment Planner - Syncfusion Angular Components Showcase App");
     });
 
@@ -23,18 +29,18 @@ describe("Doctors' page", () => {
      * @test Opens the modal window for adding a new doctor and confirms its visibility.
      */
     it("open window to add a new doctor", async () => {
-        await $('[routerLink="/doctors"]').click();
-        await $('.specialization-types button.e-control').click();
-        await expect($('.new-doctor-dialog')).toBeDisplayed();
+        await dashboard.sideMenu.item("doctors").click();
+        await doctorsPage.doctorListHeader.addNewDoctorBtn.click();
+        await expect(doctorsPage.addDoctorModal.rootEl).toBeDisplayed();
     });
 
     /**
      * @test Fills out and submits the form to add a new doctor, then validates UI changes.
      */
     it("Add a new doctor", async () => {
-        await $('[routerLink="/doctors"]').click();
-        await $('.specialization-types button.e-control').click();
-        await $('.new-doctor-dialog').waitForDisplayed();
+        await dashboard.sideMenu.item("doctors").click();
+        await doctorsPage.doctorListHeader.addNewDoctorBtn.click();
+        await doctorsPage.addDoctorModal.rootEl.waitForDisplayed();
 
         await $('[name="Name"]').setValue("John Doe");
         await $('#DoctorMobile').setValue(6669996969);
@@ -43,10 +49,22 @@ describe("Doctors' page", () => {
         await $('[name="Designation"]').setValue("Test");
 
         await $('.e-footer-content button.e-primary').click();
-        await expect($('.new-doctor-dialog')).not.toBeDisplayed();
+        await expect(doctorsPage.addDoctorModal.rootEl).not.toBeDisplayed();
 
         await expect($('#Specialist_8 .name')).toHaveText("Dr. John Doe");
         await expect($('#Specialist_8 .education')).toHaveText("Basic", { ignoreCase: true });
     });
+
+    /**
+     * @test Close the modal window for adding a new doctor
+     */
+    it("Close modal window", async () => {
+        await dashboard.sideMenu.item("doctors").click();
+        await doctorsPage.doctorListHeader.addNewDoctorBtn.click();
+        await doctorsPage.addDoctorModal.rootEl.waitForDisplayed();
+        await $('.new-doctor-dialog button.e-dlg-closeicon-btn').click();
+
+        await expect(doctorsPage.addDoctorModal.rootEl).not.toBeDisplayed();
+    })
 });
 
